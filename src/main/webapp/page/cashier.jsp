@@ -29,7 +29,7 @@
             return;
         }
 
-        $("#cashier_fm").attr('action', '/sale/addCommodity');
+        $("#cashier_fm").attr('action', '/supermarket/addCommodity');
         $("#cashier_fm").submit();
     };
     function removeCommodity() {
@@ -40,7 +40,7 @@
             return;
         }
 
-        $("#cashier_fm").attr('action', '/sale/removeCommodity');
+        $("#cashier_fm").attr('action', '/supermarket/removeCommodity');
         $("#cashier_fm").submit();
     };
 
@@ -65,7 +65,7 @@
             alert("收到现金额度有误，请查验");
             return;
         }
-        $("#cashier_fm").attr('action', '/sale/checkoutByCash');
+        $("#cashier_fm").attr('action', '/supermarket/checkoutByCash');
         $("#cashier_fm").submit();
     }
 
@@ -81,7 +81,7 @@
             alert("余额不足，请及时充值");
             return;
         }
-        $("#cashier_fm").attr('action', '/sale/checkoutByVIP');
+        $("#cashier_fm").attr('action', '/supermarket/checkoutByVIP');
         $("#cashier_fm").submit();
     }
     function showVIP() {
@@ -107,8 +107,8 @@
     String shoppingNum = request.getAttribute("shoppingNum").toString();
 
     List<Commodity> commodityList = (ArrayList)request.getAttribute("commodityList");
-    String category = request.getAttribute("category").toString();
-    String totalCost = request.getAttribute("totalCost").toString();
+    Integer category = null == request.getAttribute("category") ?0:Integer.parseInt(request.getAttribute("category").toString());
+    Integer totalCost = null == request.getAttribute("totalCost") ?0:Integer.parseInt(request.getAttribute("totalCost").toString());
 %>
 
 

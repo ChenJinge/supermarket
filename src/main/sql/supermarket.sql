@@ -16,8 +16,8 @@ DROP TABLE IF EXISTS `tb_commodity`;
 CREATE TABLE `tb_commodity` (
   `id`            INT(11) NOT NULL,
   `name`          CHAR(10)      DEFAULT NULL,
-  `specification` CHAR(5)       DEFAULT NULL,
-  `units`         CHAR(5)       DEFAULT NULL,
+  `specification` CHAR(10)       DEFAULT NULL,
+  `units`         CHAR(10)       DEFAULT NULL,
   `price`         DOUBLE(10, 2) DEFAULT NULL,
   `stock`         INT(5)        DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -28,7 +28,7 @@ CREATE TABLE `tb_commodity` (
 DROP TABLE IF EXISTS `tb_order_item`;
 CREATE TABLE `tb_order_item` (
   `id`             INT(11) NOT NULL,
-  `order_number`    INT(11)       DEFAULT NULL,
+  `order_number`   INT(11)       DEFAULT NULL,
   `commodity_Id`   INT(11)       DEFAULT NULL,
   `commodity_name` VARCHAR(10)   DEFAULT NULL,
   `price`          DOUBLE(10, 2) DEFAULT NULL,
