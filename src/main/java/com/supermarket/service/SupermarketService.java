@@ -24,7 +24,7 @@ public class SupermarketService {
     }
 
     public List<Commodity> getCommodities() {
-        return null;
+        return superMarketDao.getCommodities();
     }
 
     public List<Commodity> addBoughtCommodity(Integer shoppingNum, Commodity commodity) {
@@ -35,6 +35,9 @@ public class SupermarketService {
         return null;
     }
 
+    public void inputCommodity(Commodity commodity){
+        superMarketDao.insertCommodity(commodity);
+    }
     public List<Commodity> checkout(Integer type, Integer shoppingNum) {
         return null;
     }

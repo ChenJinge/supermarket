@@ -28,6 +28,28 @@ public class SuperMarketDao extends BaseDao {
         return null;
     }
 
+    public void insertCommodity(Commodity commodity){
+        String select_sql = "select * from tb_commodity where id = ?";
+        String insert_sql = "insert tb_commodity values(?,?,?,?,?,?)";
+
+        int id = commodity.getId();
+        double price = commodity.getPrice();
+        String name = commodity.getName();
+        String specification = commodity.getSpecification();
+        String units = commodity.getUnits();
+        int stock = commodity.getStock();
+
+        Object[] select_paramValue = {commodity.getId()};
+        List<Commodity> commodities = super.query(select_sql, select_paramValue, Commodity.class);
+
+        if (commodities != null && commodities.size()>0){
+            Commodity oldCommodity = commodities.get(0);
+            stock = stock + oldCommodity.getStock();
+        }
+        Object[] insert_paramValue = {id,name,specification,units,price};
+
+        super.update(insert_sql,insert_paramValue);
+    }
     public List<Commodity> getCommodities() {
         String sql = "select * from tb_commodity";
         Object[] paramValue = {};

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -61,6 +62,9 @@ public class PortalServlet extends HttpServlet {
         if ("/supermarket/getVIP".equals(currentUri)) {
             getVIP(req, resp);
         }
+        if ("/supermarket/inputCommodities".equals(currentUri)) {
+            inputCommodity(req, resp);
+        }
     }
 
     @Override
@@ -94,6 +98,9 @@ public class PortalServlet extends HttpServlet {
         }
         if ("/supermarket/getVIP".equals(currentUri)) {
             getVIP(req, resp);
+        }
+        if ("/supermarket/inputCommodities".equals(currentUri)) {
+            inputCommodity(req, resp);
         }
     }
 
@@ -183,6 +190,29 @@ public class PortalServlet extends HttpServlet {
 
     }
 
+    private void inputCommodity(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException{
+        int id = Integer.parseInt(req.getParameter("commodityId").toString());
+        double price = Double.parseDouble(req.getParameter("price").toString());
+        String name = req.getParameter("name");
+        String specification = req.getParameter("specification");
+        String units = req.getParameter("units");
+        int stock = Integer.parseInt(req.getParameter("stock").toString());
+
+        Commodity commodity = new Commodity();
+        commodity.setId(id);
+        commodity.setPrice(price);
+        commodity.setName(name);
+        commodity.setUnits(units);
+        commodity.setSpecification(specification);
+        commodity.setStock(stock);
+
+        supermarketService.inputCommodity(commodity);
+        String forwardPage = "";
+        List<Commodity> commodities = supermarketService.getCommodities();
+        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+        req.setAttribute("commodities", commodities);
+        view.forward(req, resp);
+    }
     private void removeCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
@@ -200,7 +230,21 @@ public class PortalServlet extends HttpServlet {
     }
 
     private void getCommodities(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String role = req.getParameter("role");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String forwardPage = errorPage;
+        User user = supermarketService.getUser(username, password);
 
+        if (user != null) {
+            forwardPage = commodityPage;
+
+        }
+
+        List<Commodity> commodities = supermarketService.getCommodities();
+        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+        req.setAttribute("commodities", commodities);
+        view.forward(req, resp);
     }
 
     private void getVIP(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

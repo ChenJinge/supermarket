@@ -8,10 +8,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>cashier</title>
 </head>
-<style type="tetx/css">
-    body {font-size:50px;}
+<style type="text/css">
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    function to_add_commodities() {
+        $("#commodity_fm").attr('action', '/supermarket/inputCommodities');
+        $("#commodity_fm").submit();
+    }
+</script>
 <body>
 <div align="center">
 
@@ -25,12 +31,21 @@
     <hr>
 </div>
 
-<form action="" id="cashier_fm" >
-    <input type="hidden" id="shopping_num_txt" name="shoppingNum" value = "${shoppingNum}">
-    <div>
-        输入商品条码：<input type="text" id="commodity_id_txt" name="commodityID"> 数量：<input type="text" id="commodity_count_txt" name="count">
-        <input type="button" id="add_btn" value="入库商品" onclick="">
-        <input type="button" id="delete_btn" value="删除商品" onclick="">
+<form action="" id="commodity_fm">
+    <div id="add_commodity" align="center">
+        <label>商品条码</label><input type="text" id="commodity_id" name="commodityId">
+        <label>商品名称</label><input type="text" id="commodityname" name="name">
+        <br>
+        <label>规格等级</label><input type="text" id="specification" name="specification">
+        <label>单&#12288&#12288位</label><input type="text" id="units" name="units">
+        <br>
+        <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock">
+        <label>售&#12288&#12288价</label><input type="text" id="price" name="price">
+        <br>
+        <br>
+        <input type="button" id="add_btn" value="入库" onclick="to_add_commodities()">
+        <input type="button" id="cancel_btn" value="取消" onclick="">
+
     </div>
     <br>
     <hr>
@@ -49,8 +64,8 @@
         <tbody>
         <c:forEach items="${commodities}" var="item">
             <tr>
-                <td align="center">${item.commodityid}</td>
-                <td align="center">${item.commodityname}</td>
+                <td align="center">${item.id}</td>
+                <td align="center">${item.name}</td>
                 <td align="center">${item.specification}</td>
                 <td align="center">${item.units}</td>
                 <td align="center">${item.stock}</td>
@@ -61,7 +76,7 @@
 
     </table>
     <br>
-
 </form>
+
 </body>
 </html>
