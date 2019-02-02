@@ -1,15 +1,23 @@
-package com.supermarket.bean;
+package com.supermarket.pojo;
 
 import java.io.Serializable;
 
+/**
+ * @Auther: Jake.Chen
+ * @Date: 2/2/2019 10:31
+ * @Description:
+ */
+public class CommodityVO implements Serializable {
 
-public class Commodity implements Serializable {
     private int id;
     private String name;
     private String specification;
     private String units;
     private double price;
     private int stock;
+
+    private int count;
+    private double totalPrice;
 
     public int getId() {
         return id;
@@ -58,5 +66,19 @@ public class Commodity implements Serializable {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+        this.totalPrice = this.count * this.price;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
 
 }

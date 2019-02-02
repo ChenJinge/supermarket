@@ -2,6 +2,7 @@ package com.supermarket.controller;
 
 import com.supermarket.bean.Commodity;
 import com.supermarket.bean.User;
+import com.supermarket.pojo.CommodityVO;
 import com.supermarket.pojo.IDUtil;
 import com.supermarket.service.SupermarketService;
 
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 
@@ -38,32 +38,35 @@ public class PortalServlet extends HttpServlet {
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
         }
-        if ("/supermarket/addCommodity".equals(currentUri)) {
-            addCommodity(req, resp);
+        if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
+            addBoughtCommodity(req, resp);
         }
         if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
         }
-        if ("/supermarket/removeCommodity".equals(currentUri)) {
-            removeCommodity(req, resp);
+        if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
+            removeBoughtCommodity(req, resp);
         }
         if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
         }
-        if ("/supermarket/checkoutByVIP".equals(currentUri)) {
-            checkoutByVIP(req, resp);
+        if ("/supermarket/checkoutByMember".equals(currentUri)) {
+            checkoutByMember(req, resp);
         }
         if ("/supermarket/getCommodities".equals(currentUri)) {
             getCommodities(req, resp);
         }
-        if ("/supermarket/getVIPs".equals(currentUri)) {
-            getVIPs(req, resp);
+        if ("/supermarket/getMembers".equals(currentUri)) {
+            getMembers(req, resp);
         }
-        if ("/supermarket/getVIP".equals(currentUri)) {
-            getVIP(req, resp);
+        if ("/supermarket/getMember".equals(currentUri)) {
+            getMember(req, resp);
         }
         if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
+        }
+        if ("/supermarket/addMember".equals(currentUri)) {
+            addMember(req, resp);
         }
     }
 
@@ -75,29 +78,29 @@ public class PortalServlet extends HttpServlet {
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
         }
-        if ("/supermarket/addCommodity".equals(currentUri)) {
-            addCommodity(req, resp);
+        if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
+            addBoughtCommodity(req, resp);
         }
         if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
         }
-        if ("/supermarket/removeCommodity".equals(currentUri)) {
-            removeCommodity(req, resp);
+        if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
+            removeBoughtCommodity(req, resp);
         }
         if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
         }
-        if ("/supermarket/checkoutByVIP".equals(currentUri)) {
-            checkoutByVIP(req, resp);
+        if ("/supermarket/checkoutByMember".equals(currentUri)) {
+            checkoutByMember(req, resp);
         }
         if ("/supermarket/getCommodities".equals(currentUri)) {
             getCommodities(req, resp);
         }
-        if ("/supermarket/getVIPs".equals(currentUri)) {
-            getVIPs(req, resp);
+        if ("/supermarket/getMembers".equals(currentUri)) {
+            getMembers(req, resp);
         }
-        if ("/supermarket/getVIP".equals(currentUri)) {
-            getVIP(req, resp);
+        if ("/supermarket/getMember".equals(currentUri)) {
+            getMember(req, resp);
         }
         if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
@@ -125,13 +128,24 @@ public class PortalServlet extends HttpServlet {
 
     }
 
+    private void addMember(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException{
+
+    }
+    private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
+
+    private void getMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
+
     private void back2cashier(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String role = req.getParameter("role");
         String forwardPage = "";
 
 
         if ("1".equals(role)) {
-            forwardPage = "/supermarket/getVIPs";
+            forwardPage = "/supermarket/getMembers";
             resp.sendRedirect(forwardPage);
         } else if ("2".equals(role)) {
             forwardPage = cashierPage;
@@ -143,7 +157,7 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void addCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void addBoughtCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commodityID = req.getParameter("commodityID");
         String count = req.getParameter("count");
         String shoppingNumStr = req.getParameter("shoppingNum");
@@ -162,7 +176,7 @@ public class PortalServlet extends HttpServlet {
 
         req.setAttribute("shoppingNum", shoppingNumber);
 
-        Commodity commodity = supermarketService.getCommodity(Integer.parseInt(commodityID));
+        CommodityVO commodity = supermarketService.getCommodity(Integer.parseInt(commodityID));
         if (commodity == null) {
             String forwardPage = cashierPage;
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
@@ -171,10 +185,10 @@ public class PortalServlet extends HttpServlet {
 
         commodity.setCount(Integer.parseInt(count));
 
-        List<Commodity> commodityList;
+        List<CommodityVO> commodityList;
         commodityList = supermarketService.addBoughtCommodity(shoppingNumber, commodity);
 
-        for (Commodity item : commodityList) {
+        for (CommodityVO item : commodityList) {
             totalCost += item.getTotalPrice();
         }
 
@@ -190,42 +204,7 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void inputCommodity(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException{
-        int id = Integer.parseInt(req.getParameter("commodityId").toString());
-        double price = Double.parseDouble(req.getParameter("price").toString());
-        String name = req.getParameter("name");
-        String specification = req.getParameter("specification");
-        String units = req.getParameter("units");
-        int stock = Integer.parseInt(req.getParameter("stock").toString());
-
-        Commodity commodity = new Commodity();
-        commodity.setId(id);
-        commodity.setPrice(price);
-        commodity.setName(name);
-        commodity.setUnits(units);
-        commodity.setSpecification(specification);
-        commodity.setStock(stock);
-
-        supermarketService.inputCommodity(commodity);
-        String forwardPage = "";
-        List<Commodity> commodities = supermarketService.getCommodities();
-        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
-        req.setAttribute("commodities", commodities);
-        view.forward(req, resp);
-    }
-    private void removeCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    private void checkoutByCash(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    private void checkoutByVIP(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    private void getVIPs(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void removeBoughtCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
 
@@ -247,7 +226,35 @@ public class PortalServlet extends HttpServlet {
         view.forward(req, resp);
     }
 
-    private void getVIP(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void inputCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("commodityId").toString());
+        double price = Double.parseDouble(req.getParameter("price").toString());
+        String name = req.getParameter("name");
+        String specification = req.getParameter("specification");
+        String units = req.getParameter("units");
+        int stock = Integer.parseInt(req.getParameter("stock").toString());
+
+        Commodity commodity = new Commodity();
+        commodity.setId(id);
+        commodity.setPrice(price);
+        commodity.setName(name);
+        commodity.setUnits(units);
+        commodity.setSpecification(specification);
+        commodity.setStock(stock);
+
+        supermarketService.inputCommodity(commodity);
+        String forwardPage = commodityPage;
+        List<Commodity> commodities = supermarketService.getCommodities();
+        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+        req.setAttribute("commodities", commodities);
+        view.forward(req, resp);
+    }
+
+    private void checkoutByCash(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
+
+    private void checkoutByMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
 }

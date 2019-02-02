@@ -46,7 +46,7 @@ public class SuperMarketDao extends BaseDao {
             Commodity oldCommodity = commodities.get(0);
             stock = stock + oldCommodity.getStock();
         }
-        Object[] insert_paramValue = {id,name,specification,units,price};
+        Object[] insert_paramValue = {id,name,specification,units,price,stock};
 
         super.update(insert_sql,insert_paramValue);
     }
@@ -57,7 +57,7 @@ public class SuperMarketDao extends BaseDao {
         return commodities;
     }
 
-    public Member getVIP(int memberId) {
+    public Member getMember(int memberId) {
         String sql = "select * from tb_member where id = ?";
         Object[] paramValue = {memberId};
         List<Member> members = super.query(sql, paramValue, Member.class);
@@ -68,7 +68,7 @@ public class SuperMarketDao extends BaseDao {
         return null;
     }
 
-    public List<Member> getVIPs() {
+    public List<Member> getMembers() {
         String sql = "select * from tb_member";
         Object[] paramValue = {};
         List<Member> members = super.query(sql, paramValue, Member.class);

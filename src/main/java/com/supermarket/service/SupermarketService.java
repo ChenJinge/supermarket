@@ -5,6 +5,7 @@ import com.supermarket.bean.Commodity;
 import com.supermarket.bean.Member;
 import com.supermarket.bean.User;
 import com.supermarket.dao.SuperMarketDao;
+import com.supermarket.pojo.CommodityVO;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class SupermarketService {
         return superMarketDao.getUser(username, password);
     }
 
-    public Commodity getCommodity(int commodityId) {
+    public CommodityVO getCommodity(int commodityId) {
         return null;
     }
 
@@ -27,7 +28,7 @@ public class SupermarketService {
         return superMarketDao.getCommodities();
     }
 
-    public List<Commodity> addBoughtCommodity(Integer shoppingNum, Commodity commodity) {
+    public List<CommodityVO> addBoughtCommodity(Integer shoppingNum, CommodityVO commodity) {
         return null;
     }
 
@@ -42,14 +43,14 @@ public class SupermarketService {
         return null;
     }
 
-    public Member getVIP(){
+    public Member getMember(){
         return null;
     }
-    public List<Member> getVIPs() {
+    public List<Member> getMembers() {
         return null;
     }
 
-    public void updateVIP(Member vip) {
+    public void updateMember(Member member) {
 
     }
 

@@ -1,10 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.Date" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.Date" %>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>receipt</title>
 </head>
 <body style="text-align: center">
@@ -68,15 +70,15 @@
         </tr>
         <tr <c:if test="${checkout_type == 0}"> hidden </c:if> </tr>
             <td align="left"><label>积分账号</label></td>
-            <td align="right"><label> ${vip_id}</label></td>
+            <td align="right"><label> ${member_id}</label></td>
         </tr>
         <tr <c:if test="${checkout_type == 0}"> hidden </c:if> >
             <td align="left"><label>本次积分</label></td>
-            <td align="right"><label>${vip_current_points} </label></td>
+            <td align="right"><label>${member_current_points} </label></td>
         </tr>
         <tr <c:if test="${checkout_type == 0}"> hidden </c:if>}>
             <td align="left"><label>累计积分</label></td>
-            <td align="right"><label>${vip_points} </label></td>
+            <td align="right"><label>${member_points} </label></td>
         </tr>
         <tr>
             <td align="left"><label>小票号</label></td>

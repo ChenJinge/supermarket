@@ -1,17 +1,16 @@
-<%@ page import="java.util.Date" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.Date" %>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>cashier</title>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>commodity</title>
 </head>
-<style type="text/css">
-
-</style>
-<script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js">
+</script>
 <script type="text/javascript">
     function to_add_commodities() {
         $("#commodity_fm").attr('action', '/supermarket/inputCommodities');
@@ -20,36 +19,30 @@
 </script>
 <body>
 <div align="center">
-
     <h1>进货管理</h1>
     <hr>
-
 </div>
-
 <div align="right">
     登录时间 ：<label><fmt:formatDate value="<%=new Date() %>" pattern="yyyy-MM-dd HH:mm:ss"/></label>
     <hr>
 </div>
-
-<form action="" id="commodity_fm">
+<form id="commodity_fm" method="post">
     <div id="add_commodity" align="center">
-        <label>商品条码</label><input type="text" id="commodity_id" name="commodityId">
-        <label>商品名称</label><input type="text" id="commodityname" name="name">
+        <label>商品条码</label><input type="text" id="commodity_id" name="commodityId"/>
+        <label>商品名称</label><input type="text" id="commodity_name" name="name"/>
         <br>
-        <label>规格等级</label><input type="text" id="specification" name="specification">
-        <label>单&#12288&#12288位</label><input type="text" id="units" name="units">
+        <label>规格等级</label><input type="text" id="specification" name="specification"/>
+        <label>单&#12288&#12288位</label><input type="text" id="units" name="units"/>
         <br>
-        <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock">
-        <label>售&#12288&#12288价</label><input type="text" id="price" name="price">
+        <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock"/>
+        <label>售&#12288&#12288价</label><input type="text" id="price" name="price"/>
         <br>
         <br>
-        <input type="button" id="add_btn" value="入库" onclick="to_add_commodities()">
-        <input type="button" id="cancel_btn" value="取消" onclick="">
-
+        <input type="button" id="add_btn" value="入库" onclick="to_add_commodities()"/>
+        <input type="button" id="cancel_btn" value="取消" onclick=""/>
     </div>
     <br>
     <hr>
-
     <table width="80%" border="1px" cellpadding="0" cellspacing="0" align="center">
         <thead>
         <tr>
@@ -77,6 +70,5 @@
     </table>
     <br>
 </form>
-
 </body>
 </html>
