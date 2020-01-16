@@ -11,7 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.util.List;
 
 
@@ -33,7 +35,10 @@ public class PortalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String currentUri = req.getRequestURI();
+        HttpSession session = req.getSession();
+
         System.out.println(currentUri + " this request method is GET method");
+        System.out.println(" This request seesion id is " + session.getId());
 
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
@@ -73,7 +78,10 @@ public class PortalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String currentUri = req.getRequestURI();
-        System.out.println(currentUri + " this request method is POST method");
+        HttpSession session = req.getSession();
+
+        System.out.println(currentUri + " this request method is GET method");
+        System.out.println(" This request seesion id is " + session.getId());
 
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
