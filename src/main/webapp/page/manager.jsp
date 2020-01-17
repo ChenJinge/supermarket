@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>manager</title>
 </head>
+<script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
     function to_add_member() {
         $("#manager_fm").attr('action', '/supermarket/addMember');
@@ -19,7 +20,7 @@
     <h1>会员管理</h1>
     <hr>
 </div>
-<form id="manager_fm ">
+<form id="manager_fm">
     <div id="add_member" align="center">
         <label>会员卡号</label><input type="text" id="member_id" name="id"/>
         <label>姓&#12288&#12288名</label><input type="text" id="member_name" name="name"/>

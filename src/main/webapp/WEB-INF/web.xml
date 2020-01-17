@@ -18,6 +18,19 @@
         <url-pattern>/supermarket/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.jpg</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.css</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>Set Character Encoding</filter-name>
         <filter-class>com.supermarket.pojo.SetCharacterEncodingFilter</filter-class>

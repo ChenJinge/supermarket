@@ -1,6 +1,7 @@
 package com.supermarket.controller;
 
 import com.supermarket.bean.Commodity;
+import com.supermarket.bean.Member;
 import com.supermarket.bean.User;
 import com.supermarket.pojo.CommodityVO;
 import com.supermarket.pojo.IDUtil;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.HttpCookie;
 import java.util.List;
 
 
@@ -136,9 +136,31 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void addMember(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException{
+    private void addMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
+        String phone = req.getParameter("phone");
+        String points = req.getParameter("points");
+        String total = req.getParameter("total");
+        long currentTime = System.currentTimeMillis();
+
+        int memberPoints = Integer.parseInt(points);
+        int memberId = Integer.parseInt(id);
+        double memberTotal = Double.parseDouble(total);
+
+        Member member = new Member();
+        member.setPhone(phone);
+        member.setPoints(memberPoints);
+        member.setId(memberId);
+        member.setName(name);
+        member.setTotal(memberTotal);
+        member.setRegisterTime(currentTime);
+        member.setUpdateTime(currentTime);
+
+        supermarketService
     }
+
     private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }

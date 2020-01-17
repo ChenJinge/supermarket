@@ -9,8 +9,8 @@ public class Member implements Serializable {
     private int points;
     private double total;
     private String phone;
-    private int registerTime;
-    private int updateTime;
+    private long registerTime;
+    private long updateTime;
 
     public int getId() {
         return id;
@@ -52,19 +52,19 @@ public class Member implements Serializable {
         this.phone = phone;
     }
 
-    public int getRegisterTime() {
+    public long getRegisterTime() {
         return registerTime;
     }
 
-    public void setRegisterTime(int registerTime) {
+    public void setRegisterTime(long registerTime) {
         this.registerTime = registerTime;
     }
 
-    public int getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(int updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
 }
