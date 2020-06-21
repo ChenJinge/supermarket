@@ -158,7 +158,7 @@ public class PortalServlet extends HttpServlet {
         member.setRegisterTime(currentTime);
         member.setUpdateTime(currentTime);
 
-        supermarketService
+        //todo 保存member
     }
 
     private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
