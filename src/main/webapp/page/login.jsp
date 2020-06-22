@@ -38,8 +38,7 @@
         <input type="radio" name="role" value=2>收银员
         <br/>
         <br/>
-        <div align="center"><input type="submit" value="登 录"/> <input type="button" value="进 货"
-                                                                      onclick="to_manage_commodities()"/></div>
+        <div align="center"><input type="submit" value="登 录"/> <input type="button" value="进 货" onclick="to_manage_commodities()"/></div>
     </div>
     <br/>
 </form>

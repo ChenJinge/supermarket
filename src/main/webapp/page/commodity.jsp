@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>commodity</title>
+    <title>进货管理</title>
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js">
 </script>
@@ -34,9 +34,10 @@
         <label>规格等级</label><input type="text" id="specification" name="specification"/>
         <label>单&#12288&#12288位</label><input type="text" id="units" name="units"/>
         <br>
-        <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock"/>
         <label>售&#12288&#12288价</label><input type="text" id="price" name="price"/>
+        <label>会员&#12288价</label><input type="text" id="memberprice" name="memberprice"/>
         <br>
+        <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock"/>
         <br>
         <input type="button" id="add_btn" value="入库" onclick="to_add_commodities()"/>
         <input type="button" id="cancel_btn" value="取消" onclick=""/>
@@ -52,6 +53,7 @@
             <th>单位</th>
             <th>当前库存</th>
             <th>零售价</th>
+            <th>会员价</th>
         </tr>
         </thead>
         <tbody>
@@ -63,6 +65,7 @@
                 <td align="center">${item.units}</td>
                 <td align="center">${item.stock}</td>
                 <td align="center">${item.price}</td>
+                <td align="center">${item.memberprice}</td>
             </tr>
         </c:forEach>
         </tbody>

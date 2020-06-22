@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -40,9 +41,6 @@ public class PortalServlet extends HttpServlet {
         System.out.println(currentUri + " this request method is GET method");
         System.out.println(" This request seesion id is " + session.getId());
 
-        if ("/supermarket/login".equals(currentUri)) {
-            login(req, resp);
-        }
         if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
             addBoughtCommodity(req, resp);
         }
@@ -80,38 +78,48 @@ public class PortalServlet extends HttpServlet {
         String currentUri = req.getRequestURI();
         HttpSession session = req.getSession();
 
-        System.out.println(currentUri + " this request method is GET method");
+        System.out.println(currentUri + " this request method is POST method");
         System.out.println(" This request seesion id is " + session.getId());
 
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
+            return;
         }
         if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
             addBoughtCommodity(req, resp);
+            return;
         }
         if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
+            return;
         }
         if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
             removeBoughtCommodity(req, resp);
+            return;
         }
         if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
+            return;
         }
         if ("/supermarket/checkoutByMember".equals(currentUri)) {
             checkoutByMember(req, resp);
+            return;
         }
         if ("/supermarket/getCommodities".equals(currentUri)) {
             getCommodities(req, resp);
+            return;
         }
         if ("/supermarket/getMembers".equals(currentUri)) {
             getMembers(req, resp);
+            return;
         }
         if ("/supermarket/getMember".equals(currentUri)) {
             getMember(req, resp);
+            return;
         }
         if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
+            return;
         }
     }
 
@@ -193,10 +201,10 @@ public class PortalServlet extends HttpServlet {
         String shoppingNumStr = req.getParameter("shoppingNum");
         Double totalCost = 0.0;
         int category = 0;
-        int shoppingNumber = 0;
+        long shoppingNumber = 0;
 
         if (shoppingNumStr != null && shoppingNumStr != "") {
-            shoppingNumber = Integer.parseInt(shoppingNumStr);
+            shoppingNumber = Long.parseLong(shoppingNumStr);
             if (shoppingNumber == 0) {
                 shoppingNumber = IDUtil.getId();
             }
@@ -257,20 +265,22 @@ public class PortalServlet extends HttpServlet {
     }
 
     private void inputCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("commodityId").toString());
-        double price = Double.parseDouble(req.getParameter("price").toString());
+        long id = Long.parseLong(req.getParameter("commodityId"));
+        BigDecimal price = new BigDecimal(req.getParameter("price"));
+        BigDecimal memberPrice = new BigDecimal(req.getParameter("memberprice"));
         String name = req.getParameter("name");
         String specification = req.getParameter("specification");
         String units = req.getParameter("units");
-        int stock = Integer.parseInt(req.getParameter("stock").toString());
+        int stock = Integer.parseInt(req.getParameter("stock"));
 
         Commodity commodity = new Commodity();
         commodity.setId(id);
-        commodity.setPrice(price);
         commodity.setName(name);
         commodity.setUnits(units);
         commodity.setSpecification(specification);
         commodity.setStock(stock);
+        commodity.setPrice(price);
+        commodity.setMemberprice(memberPrice);
 
         supermarketService.inputCommodity(commodity);
         String forwardPage = commodityPage;

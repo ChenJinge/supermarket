@@ -151,7 +151,7 @@
                 <td align="center">${item.specification}</td>
                 <td align="center">${item.units}</td>
                 <td align="center">${item.stock}</td>
-                <td align="center">${item.price}</td>
+                <td align="center">${item.memberPrice}</td>
                 <td align="center">${item.price}</td>
                 <td align="center">${item.count}</td>
                 <td align="center">${item.totalprice}</td>

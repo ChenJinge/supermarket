@@ -1,21 +1,25 @@
 package com.supermarket.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-
+/**
+ * 商品
+ */
 public class Commodity implements Serializable {
-    private int id;
+    private long id;
     private String name;
     private String specification;
     private String units;
-    private double price;
+    private BigDecimal price;
+    private BigDecimal memberprice;
     private int stock;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -43,11 +47,19 @@ public class Commodity implements Serializable {
         this.units = units;
     }
 
-    public double getPrice() {
+    public BigDecimal getMemberprice() {
+        return memberprice;
+    }
+
+    public void setMemberprice(BigDecimal memberprice) {
+        this.memberprice = memberprice;
+    }
+
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

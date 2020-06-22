@@ -28,7 +28,7 @@ public class SupermarketService {
         return superMarketDao.getCommodities();
     }
 
-    public List<CommodityVO> addBoughtCommodity(Integer shoppingNum, CommodityVO commodity) {
+    public List<CommodityVO> addBoughtCommodity(Long shoppingNum, CommodityVO commodity) {
         return null;
     }
 

@@ -18,8 +18,8 @@ public class SuperMarketDao extends BaseDao {
     }
 
     public void insertCommodity(Commodity commodity){
-        String insert_sql = "insert tb_commodity values(?,?,?,?,?,?)";
-        Object[] insert_paramValue = {commodity.getId(),commodity.getName(),commodity.getSpecification(),commodity.getUnits(),commodity.getPrice(),commodity.getStock()};
+        String insert_sql = "insert tb_commodity values(?,?,?,?,?,?,?)";
+        Object[] insert_paramValue = {commodity.getId(),commodity.getName(),commodity.getSpecification(),commodity.getUnits(),commodity.getPrice(),commodity.getMemberprice(),commodity.getStock()};
         super.update(insert_sql,insert_paramValue);
     }
 
@@ -77,7 +77,10 @@ public class SuperMarketDao extends BaseDao {
 
     public void insertOrderItem(OrderItem orderItem) {
         String sql = "insert tb_order_item values(?,?,?,?,?,?,?,?)";
-        Object[] paramValue = {orderItem.getId(),orderItem.getOrderNumber(),orderItem.getCommodityId(),orderItem.getCommodityName(),orderItem.getPrice(),orderItem.get(),order.getCheckoutTime()};
+        Object[] paramValue = {orderItem.getId(),orderItem.getOrderNumber(),orderItem.getCommodityId(),
+                orderItem.getCommodityName(),orderItem.getPrice(),orderItem.getCount(),
+                orderItem.getTotal(),orderItem.getIsChecked()
+        };
         super.update(sql,paramValue);
     }
 
