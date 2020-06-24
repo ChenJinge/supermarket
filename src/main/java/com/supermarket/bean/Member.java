@@ -1,23 +1,32 @@
 package com.supermarket.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 
 public class Member implements Serializable {
-    private int id;
+    private long id;
     private String name;
     private int points;
-    private double total;
+    private BigDecimal total;
     private String phone;
     private long registerTime;
     private long updateTime;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public String getName() {
@@ -34,14 +43,6 @@ public class Member implements Serializable {
 
     public void setPoints(int points) {
         this.points = points;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
     }
 
     public String getPhone() {

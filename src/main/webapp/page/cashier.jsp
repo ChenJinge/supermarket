@@ -19,7 +19,7 @@
         var commodityID = $("#commodity_id_txt").val();
         var commodityCount = $("#commodity_count_txt").val();
         if (commodityID == '' || commodityID == undefined) {
-            alert("请输入商品码");
+            alert("请输入商品条码");
             return;
         }
         if (commodityCount == '' || commodityCount == undefined) {

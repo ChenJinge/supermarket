@@ -144,7 +144,7 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void addMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void addMember(HttpServletRequest req, HttpServletResponse resp) {
 
         String id = req.getParameter("id");
         String name = req.getParameter("name");
@@ -154,8 +154,8 @@ public class PortalServlet extends HttpServlet {
         long currentTime = System.currentTimeMillis();
 
         int memberPoints = Integer.parseInt(points);
-        int memberId = Integer.parseInt(id);
-        double memberTotal = Double.parseDouble(total);
+        long memberId = Long.parseLong(id);
+        BigDecimal memberTotal = new BigDecimal(total);
 
         Member member = new Member();
         member.setPhone(phone);
@@ -214,7 +214,7 @@ public class PortalServlet extends HttpServlet {
 
         req.setAttribute("shoppingNum", shoppingNumber);
 
-        CommodityVO commodity = supermarketService.getCommodity(Integer.parseInt(commodityID));
+        CommodityVO commodity = supermarketService.getCommodityVO(Integer.parseInt(commodityID));
         if (commodity == null) {
             String forwardPage = cashierPage;
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
@@ -264,30 +264,31 @@ public class PortalServlet extends HttpServlet {
         view.forward(req, resp);
     }
 
+    /**
+     * 进货
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     private void inputCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        long id = Long.parseLong(req.getParameter("commodityId"));
-        BigDecimal price = new BigDecimal(req.getParameter("price"));
-        BigDecimal memberPrice = new BigDecimal(req.getParameter("memberprice"));
-        String name = req.getParameter("name");
-        String specification = req.getParameter("specification");
-        String units = req.getParameter("units");
-        int stock = Integer.parseInt(req.getParameter("stock"));
 
+        //进货
         Commodity commodity = new Commodity();
-        commodity.setId(id);
-        commodity.setName(name);
-        commodity.setUnits(units);
-        commodity.setSpecification(specification);
-        commodity.setStock(stock);
-        commodity.setPrice(price);
-        commodity.setMemberprice(memberPrice);
-
+        commodity.setId(Long.parseLong(req.getParameter("commodityId")));
+        commodity.setName(req.getParameter("name"));
+        commodity.setUnits(req.getParameter("units"));
+        commodity.setSpecification(req.getParameter("specification"));
+        commodity.setStock(Integer.parseInt(req.getParameter("stock")));
+        commodity.setPrice(new BigDecimal(req.getParameter("price")));
+        commodity.setMemberprice( new BigDecimal(req.getParameter("memberprice")));
         supermarketService.inputCommodity(commodity);
-        String forwardPage = commodityPage;
+
+        //重载全部商品
         List<Commodity> commodities = supermarketService.getCommodities();
-        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
         req.setAttribute("commodities", commodities);
-        view.forward(req, resp);
+        String forwardPage = commodityPage;
+        req.getRequestDispatcher(forwardPage).forward(req, resp);
     }
 
     private void checkoutByCash(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

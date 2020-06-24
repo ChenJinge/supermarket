@@ -16,6 +16,15 @@
         $("#commodity_fm").attr('action', '/supermarket/inputCommodities');
         $("#commodity_fm").submit();
     }
+    function cancle() {
+        $("#commodity_id").val("");
+        $("#commodity_name").val("");
+        $("#stock").val("");
+        $("#specification").val("");
+        $("#units").val("");
+        $("#price").val("");
+        $("#memberprice").val("");
+    }
 </script>
 <body>
 <div align="center">
@@ -40,7 +49,7 @@
         <label>数&#12288&#12288量</label><input type="text" id="stock" name="stock"/>
         <br>
         <input type="button" id="add_btn" value="入库" onclick="to_add_commodities()"/>
-        <input type="button" id="cancel_btn" value="取消" onclick=""/>
+        <input type="button" id="cancel_btn" value="取消" onclick="cancle()"/>
     </div>
     <br>
     <hr>
