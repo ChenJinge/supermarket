@@ -1,10 +1,11 @@
 package com.supermarket.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.supermarket.bean.Commodity;
 import com.supermarket.bean.Member;
 import com.supermarket.bean.User;
 import com.supermarket.pojo.CommodityVO;
-import com.supermarket.pojo.IDUtil;
+import com.supermarket.util.IDUtil;
 import com.supermarket.service.SupermarketService;
 
 import javax.servlet.RequestDispatcher;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -68,9 +70,7 @@ public class PortalServlet extends HttpServlet {
         if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
         }
-        if ("/supermarket/addMember".equals(currentUri)) {
-            addMember(req, resp);
-        }
+
     }
 
     @Override
@@ -121,6 +121,9 @@ public class PortalServlet extends HttpServlet {
             inputCommodity(req, resp);
             return;
         }
+        if ("/supermarket/addMember".equals(currentUri)) {
+            addMember(req, resp);
+        }
     }
 
     private void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -144,29 +147,39 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void addMember(HttpServletRequest req, HttpServletResponse resp) {
+    private void addMember(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         String id = req.getParameter("id");
         String name = req.getParameter("name");
         String phone = req.getParameter("phone");
         String points = req.getParameter("points");
         String total = req.getParameter("total");
-        long currentTime = System.currentTimeMillis();
-
-        int memberPoints = Integer.parseInt(points);
+        String errorMessage;
+        if (StringUtils.isEmpty(id)){
+            errorMessage = "会员号不能为空！";
+            req.setAttribute("errorMessage",errorMessage);
+            req.getRequestDispatcher(errorPage).forward(req,resp);
+        }
         long memberId = Long.parseLong(id);
-        BigDecimal memberTotal = new BigDecimal(total);
+        int memberPoints = StringUtils.isEmpty(points)? 0 : Integer.parseInt(points);
+        BigDecimal memberTotal = StringUtils.isEmpty(total)? new BigDecimal(0) : new BigDecimal(total);
 
         Member member = new Member();
+        member.setId(memberId);
         member.setPhone(phone);
         member.setPoints(memberPoints);
-        member.setId(memberId);
         member.setName(name);
         member.setTotal(memberTotal);
-        member.setRegisterTime(currentTime);
-        member.setUpdateTime(currentTime);
+        errorMessage = supermarketService.addMember(member);
 
-        //todo 保存member
+        if (!StringUtils.isEmpty(errorMessage)){
+            req.setAttribute("errorMessage",errorMessage);
+            req.getRequestDispatcher(errorPage).forward(req,resp);
+        }
+        //获取所有的会员列表
+        List<Member> members = supermarketService.getMembers();
+        req.setAttribute("members",members);
+        req.getRequestDispatcher(managerPage).forward(req,resp);
     }
 
     private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -1,4 +1,4 @@
-package com.supermarket.pojo;
+package com.supermarket.util;
 
 
 import java.text.SimpleDateFormat;

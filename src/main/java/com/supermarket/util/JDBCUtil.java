@@ -1,4 +1,4 @@
-package com.supermarket.pojo;
+package com.supermarket.util;
 
 import java.io.InputStream;
 import java.sql.*;

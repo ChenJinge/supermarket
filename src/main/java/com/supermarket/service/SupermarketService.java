@@ -6,8 +6,10 @@ import com.supermarket.bean.Member;
 import com.supermarket.bean.User;
 import com.supermarket.dao.SuperMarketDao;
 import com.supermarket.pojo.CommodityVO;
+import com.supermarket.util.IDUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SupermarketService {
     private SuperMarketDao superMarketDao;
@@ -60,14 +62,24 @@ public class SupermarketService {
     }
 
     //-----------------------会员管理------------------
-    public void addMember(){
-
+    public String addMember(Member member){
+        //判断id是否已存在
+        Member mem = superMarketDao.getMember(member.getId());
+        if (mem !=null){
+            return "该会员已存在!";
+        }
+        //保存member
+        long currentTime = System.currentTimeMillis();
+        member.setRegisterTime(currentTime);
+        member.setUpdateTime(currentTime);
+        superMarketDao.insertMember(member);
+        return "";
     }
     public Member getMember(){
         return null;
     }
     public List<Member> getMembers() {
-        return null;
+        return superMarketDao.getMembers();
     }
 
     public void updateMember(Member member) {

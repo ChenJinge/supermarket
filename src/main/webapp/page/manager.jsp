@@ -20,7 +20,7 @@
     <h1>会员管理</h1>
     <hr>
 </div>
-<form id="manager_fm">
+<form id="manager_fm" method="post">
     <div id="add_member" align="center">
         <label>会员卡号</label><input type="text" id="member_id" name="id"/>
         <label>姓&#12288&#12288名</label><input type="text" id="member_name" name="name"/>

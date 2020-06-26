@@ -47,11 +47,11 @@ public class SuperMarketDao extends BaseDao {
     }
 
     public void insertMember(Member member){
-        String sql = "insert tb_member values(?,?,?,?,?,?,?)";
-        Object[] insert_paramValue = {member.getId(),member.getName(),member.getPhone(),member.getTotal(),member.getRegisterTime(),member.getRegisterTime(),member.getUpdateTime()};
+        String sql = "insert into tb_member values(?,?,?,?,?,?,?)";
+        Object[] insert_paramValue = {member.getId(),member.getName(),member.getPhone(),member.getPoints(),member.getTotal(),member.getRegisterTime(),member.getUpdateTime()};
         super.update(sql,insert_paramValue);
     }
-    public Member getMember(int memberId) {
+    public Member getMember(long memberId) {
         String sql = "select * from tb_member where id = ?";
         Object[] paramValue = {memberId};
         List<Member> members = super.query(sql, paramValue, Member.class);

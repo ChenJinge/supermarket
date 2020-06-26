@@ -9,5 +9,6 @@
 </head>
 <body>
 <h>There is a problem </h>
+<h1>${errorMessage}</h1>
 </body>
 </html>

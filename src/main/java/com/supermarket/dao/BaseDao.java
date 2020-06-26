@@ -1,6 +1,6 @@
 package com.supermarket.dao;
 
-import com.supermarket.pojo.JDBCUtil;
+import com.supermarket.util.JDBCUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
