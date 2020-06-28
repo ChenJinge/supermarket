@@ -11,10 +11,7 @@ import com.supermarket.service.SupermarketService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -24,12 +21,12 @@ import java.util.List;
 
 public class PortalServlet extends HttpServlet {
 
-    private String cashierPage = "/page/cashier.jsp";
-    private String managerPage = "/page/manager.jsp";
-    private String commodityPage = "/page/commodity.jsp";
-    private String receiptPage = "/page/receipt.jsp";
-    private String loginPage = "/page/login.jsp";
-    private String errorPage = "/page/error.jsp";
+    private String cashierPage = "/WEB-INF/page/cashier.jsp";
+    private String managerPage = "/WEB-INF/page/manager.jsp";
+    private String commodityPage = "/WEB-INF/page/commodity.jsp";
+    private String receiptPage = "/WEB-INF/page/receipt.jsp";
+    private String loginPage = "/WEB-INF/page/login.jsp";
+    private String errorPage = "/WEB-INF/page/error.jsp";
     private SupermarketService supermarketService;
 
     @Override
@@ -45,31 +42,40 @@ public class PortalServlet extends HttpServlet {
         System.out.println(currentUri + " this request method is GET method");
         System.out.println(" This request seesion id is " + session.getId());
 
-        if ("/supermarket/back2cashier".equals(currentUri)) {
+        Cookie[] cookies = req.getCookies();
+        String cookieValue = "";
+        for ( Cookie cookie:cookies ) {
+            if ("kfc".equals(cookie.getName())){
+                cookieValue = cookie.getValue();
+                break;
+            }
+        }
+        if ("/supermarket/welcome".equals(currentUri) || !cookieValue.equals(session.getAttribute("kfc"))){
+            String forwardPage = "/WEB-INF/page/login.jsp";
+            RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+            view.forward(req, resp);
+        }else if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
-        }
-
-        if ("/supermarket/checkoutByCash".equals(currentUri)) {
+        }else  if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
-        }
-        if ("/supermarket/checkoutByMember".equals(currentUri)) {
+        }else  if ("/supermarket/checkoutByMember".equals(currentUri)) {
             checkoutByMember(req, resp);
-        }
-        if ("/supermarket/getCommodities".equals(currentUri)) {
+        }else  if ("/supermarket/getCommodities".equals(currentUri)) {
             getCommodities(req, resp);
-        }
-        if ("/supermarket/getMembers".equals(currentUri)) {
+        }else  if ("/supermarket/getMembers".equals(currentUri)) {
             getMembers(req, resp);
-        }
-        if ("/supermarket/queryMember".equals(currentUri)) {
+        }else  if ("/supermarket/queryMember".equals(currentUri)) {
             queryMember(req, resp);
-        }
-        if ("/supermarket/getMember".equals(currentUri)) {
+        }else  if ("/supermarket/getMember".equals(currentUri)) {
             getMember(req, resp);
-        }
-        if ("/supermarket/inputCommodities".equals(currentUri)) {
+        }else  if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
         }
+//        if ("/supermarket/welcome".equals(currentUri)){
+//            String forwardPage = "/WEB-INF/page/login.jsp";
+//            RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+//            view.forward(req, resp);
+//        }
 
     }
 
@@ -79,40 +85,59 @@ public class PortalServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         System.out.println(currentUri + " this request method is POST method");
-        System.out.println(" This request seesion id is " + session.getId());
+        System.out.println(" This request session id is " + session.getId());
 
-        if ("/supermarket/login".equals(currentUri)) {
-            login(req, resp);
+        Cookie[] cookies = req.getCookies();
+        String cookieValue = "";
+        for ( Cookie cookie:cookies ) {
+            if ("kfc".equals(cookie.getName())){
+                cookieValue = cookie.getValue();
+                break;
+            }
         }
-        if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
-            addBoughtCommodity(req, resp);
-        }
-        if ("/supermarket/back2cashier".equals(currentUri)) {
-            back2cashier(req, resp);
-        }
-        if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
-            removeBoughtCommodity(req, resp);
-        }
-        if ("/supermarket/checkoutByCash".equals(currentUri)) {
-            checkoutByCash(req, resp);
-        }
-        if ("/supermarket/checkoutByMember".equals(currentUri)) {
-            checkoutByMember(req, resp);
-        }
-        if ("/supermarket/getCommodities".equals(currentUri)) {
-            getCommodities(req, resp);
-        }
-        if ("/supermarket/getMembers".equals(currentUri)) {
-            getMembers(req, resp);
-        }
-        if ("/supermarket/getMember".equals(currentUri)) {
-            getMember(req, resp);
-        }
-        if ("/supermarket/inputCommodities".equals(currentUri)) {
-            inputCommodity(req, resp);
-        }
-        if ("/supermarket/addMember".equals(currentUri)) {
-            addMember(req, resp);
+        if (!cookieValue.equals(session.getAttribute("kfc"))){
+            if ("/supermarket/login".equals(currentUri)) {
+                login(req, resp);
+            }else {
+                String forwardPage = "/WEB-INF/page/login.jsp";
+                RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+                view.forward(req, resp);
+            }
+        }else {
+            if ("/supermarket/login".equals(currentUri)) {
+                login(req, resp);
+            }
+            if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
+                addBoughtCommodity(req, resp);
+            }
+            if ("/supermarket/back2cashier".equals(currentUri)) {
+                back2cashier(req, resp);
+            }
+            if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
+                removeBoughtCommodity(req, resp);
+            }
+            if ("/supermarket/checkoutByCash".equals(currentUri)) {
+                checkoutByCash(req, resp);
+            }
+            if ("/supermarket/checkoutByMember".equals(currentUri)) {
+                checkoutByMember(req, resp);
+            }
+            if ("/supermarket/getCommodities".equals(currentUri)) {
+                getCommodities(req, resp);
+            }
+            if ("/supermarket/getMembers".equals(currentUri)) {
+                getMembers(req, resp);
+            }
+            //进入管理员页面（会员管理）
+            if ("/supermarket/getMember".equals(currentUri)) {
+                getMember(req, resp);
+            }
+            if ("/supermarket/inputCommodities".equals(currentUri)) {
+                inputCommodity(req, resp);
+            }
+            if ("/supermarket/addMember".equals(currentUri)) {
+                addMember(req, resp);
+            }
         }
     }
 
@@ -125,6 +150,10 @@ public class PortalServlet extends HttpServlet {
         User user = supermarketService.getUser(username, password);
 
         if (user != null) {
+            Cookie cookie = new Cookie("kfc","sb");
+            resp.addCookie(cookie);
+            req.getSession().setAttribute("kfc","sb");
+
             if ("1".equals(role)) {
                 forwardPage = managerPage;
             } else if ("2".equals(role)) {

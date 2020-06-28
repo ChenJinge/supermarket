@@ -5,7 +5,7 @@
 
     <display-name>supermarket</display-name>
     <welcome-file-list>
-        <welcome-file>/page/login.jsp</welcome-file>
+        <welcome-file>/supermarket/welcome</welcome-file>
     </welcome-file-list>
     <servlet>
         <description></description>
