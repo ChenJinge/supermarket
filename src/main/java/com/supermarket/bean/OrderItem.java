@@ -2,39 +2,57 @@ package com.supermarket.bean;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class OrderItem implements Serializable {
-    private int id;
-    private int orderNumber;
-    private int commodityId;
+    private long id;
+    private long orderId;
+    private long shoppingNumber;
+    private long commodityId;
     private String commodityName;
-    private double price;
+    private BigDecimal price;
     private int count;
-    private double total;
+    private BigDecimal total;
     private int isChecked;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getOrderNumber() {
-        return orderNumber;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
-    public int getCommodityId() {
+    public long getShoppingNumber() {
+        return shoppingNumber;
+    }
+
+    public void setShoppingNumber(long shoppingNumber) {
+        this.shoppingNumber = shoppingNumber;
+    }
+
+    public long getCommodityId() {
         return commodityId;
     }
 
-    public void setCommodityId(int commodityId) {
+    public void setCommodityId(long commodityId) {
         this.commodityId = commodityId;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public String getCommodityName() {
@@ -45,11 +63,11 @@ public class OrderItem implements Serializable {
         this.commodityName = commodityName;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -59,14 +77,6 @@ public class OrderItem implements Serializable {
 
     public void setCount(int count) {
         this.count = count;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
     }
 
     public int getIsChecked() {

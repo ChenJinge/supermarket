@@ -3,6 +3,8 @@ package com.supermarket.util;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JDBCUtil {
 
@@ -83,26 +85,53 @@ public class JDBCUtil {
         }
     }
 
+    public static String humpToLine2(String str) {
+        Pattern humpPattern = Pattern.compile("[A-Z]");
+        Matcher matcher = humpPattern.matcher(str);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "_" + matcher.group(0).toLowerCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
+    /**
+     * 将数据库字段转换成驼峰
+     * @param str
+     * @return
+     */
+    public static String toCamel(String str){
+         String[] strs = str.split("_");
+         StringBuffer sb = new StringBuffer(strs[0]);
+        for (int i = 1; i < strs.length; i++) {
+            sb.append(strs[i].substring(0,1).toUpperCase()).append(strs[i].substring(1));
+        }
+        return sb.toString();
+    }
 
     public static void main(String[] args) {
 
-        Connection connection = JDBCUtil.getConnection();
-        Statement statement = null;
-        ResultSet resultSet = null;
+//        Connection connection = JDBCUtil.getConnection();
+//        Statement statement = null;
+//        ResultSet resultSet = null;
+//
+//        try {
+//            statement = connection.createStatement();
+//            String sql = "SELECT * FROM vip";
+//            resultSet = statement.executeQuery(sql);
+//
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt("vipID");
+//                System.out.println("ID: " + id);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            JDBCUtil.close(connection, statement, resultSet);
+//        }
 
-        try {
-            statement = connection.createStatement();
-            String sql = "SELECT * FROM vip";
-            resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("vipID");
-                System.out.println("ID: " + id);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCUtil.close(connection, statement, resultSet);
-        }
+        String param = "user_type_name";
+        String re = toCamel(param);
     }
 }

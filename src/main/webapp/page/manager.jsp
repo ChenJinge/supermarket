@@ -14,6 +14,11 @@
         $("#manager_fm").attr('action', '/supermarket/addMember');
         $("#manager_fm").submit();
     }
+    function to_query_member() {
+        $("#manager_fm").attr('action', '/supermarket/queryMember');
+        $("#manager_fm").attr('method','get');
+        $("#manager_fm").submit();
+    }
 </script>
 <body>
 <div align="center">
@@ -33,6 +38,7 @@
         <br>
         <input type="button" id="add_btn" value="添加" onclick="to_add_member()"/>
         <input type="button" id="cancel_btn" value="取消" onclick=""/>
+        <input type="button" id="query_btn" value="查询" onclick="to_query_member()"/>
         <br>
         <hr>
     </div>
@@ -45,6 +51,7 @@
             <th>电话</th>
             <th>积分</th>
             <th>余额</th>
+            <th>注册时间</th>
         </tr>
         </tr>
         </thead>
@@ -56,6 +63,7 @@
                 <td align="center">${item.phone}</td>
                 <td align="center">${item.points}</td>
                 <td align="center">${item.total}</td>
+                <td align="center">${item.registerTime}</td>
             </tr>
         </c:forEach>
         </tbody>

@@ -1,6 +1,7 @@
 package com.supermarket.pojo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @Auther: Jake.Chen
@@ -9,21 +10,22 @@ import java.io.Serializable;
  */
 public class CommodityVO implements Serializable {
 
-    private int id;
+    private long id;
     private String name;
     private String specification;
     private String units;
-    private double price;
+    private BigDecimal price;
+    private BigDecimal memberprice;
     private int stock;
-
+    private long shoppingNumber;
     private int count;
-    private double totalPrice;
+    private BigDecimal total;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -51,12 +53,20 @@ public class CommodityVO implements Serializable {
         this.units = units;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getMemberprice() {
+        return memberprice;
+    }
+
+    public void setMemberprice(BigDecimal memberprice) {
+        this.memberprice = memberprice;
     }
 
     public int getStock() {
@@ -67,18 +77,27 @@ public class CommodityVO implements Serializable {
         this.stock = stock;
     }
 
+    public long getShoppingNumber() {
+        return shoppingNumber;
+    }
+
+    public void setShoppingNumber(long shoppingNumber) {
+        this.shoppingNumber = shoppingNumber;
+    }
+
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
-        this.totalPrice = this.count * this.price;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getTotal() {
+        return total;
     }
 
-
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
 }

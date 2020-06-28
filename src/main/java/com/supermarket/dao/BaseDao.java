@@ -58,7 +58,7 @@ public class BaseDao {
                     // 获取每一列的列名称, 对应的值
                     Object value = resultSet.getObject(columnName);
                     // 封装： 设置到t对象的属性中  【BeanUtils组件】
-                    BeanUtils.copyProperty(t, columnName, value);
+                    BeanUtils.copyProperty(t, JDBCUtil.toCamel(columnName), value);
                 }
 
                 // 把封装完毕的对象，添加到list集合中

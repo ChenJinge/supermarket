@@ -3,6 +3,7 @@ package com.supermarket.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.supermarket.bean.Commodity;
 import com.supermarket.bean.Member;
+import com.supermarket.bean.OrderItem;
 import com.supermarket.bean.User;
 import com.supermarket.pojo.CommodityVO;
 import com.supermarket.util.IDUtil;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -43,15 +45,10 @@ public class PortalServlet extends HttpServlet {
         System.out.println(currentUri + " this request method is GET method");
         System.out.println(" This request seesion id is " + session.getId());
 
-        if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
-            addBoughtCommodity(req, resp);
-        }
         if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
         }
-        if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
-            removeBoughtCommodity(req, resp);
-        }
+
         if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
         }
@@ -63,6 +60,9 @@ public class PortalServlet extends HttpServlet {
         }
         if ("/supermarket/getMembers".equals(currentUri)) {
             getMembers(req, resp);
+        }
+        if ("/supermarket/queryMember".equals(currentUri)) {
+            queryMember(req, resp);
         }
         if ("/supermarket/getMember".equals(currentUri)) {
             getMember(req, resp);
@@ -83,43 +83,33 @@ public class PortalServlet extends HttpServlet {
 
         if ("/supermarket/login".equals(currentUri)) {
             login(req, resp);
-            return;
         }
         if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
             addBoughtCommodity(req, resp);
-            return;
         }
         if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
-            return;
         }
         if ("/supermarket/removeBoughtCommodity".equals(currentUri)) {
             removeBoughtCommodity(req, resp);
-            return;
         }
         if ("/supermarket/checkoutByCash".equals(currentUri)) {
             checkoutByCash(req, resp);
-            return;
         }
         if ("/supermarket/checkoutByMember".equals(currentUri)) {
             checkoutByMember(req, resp);
-            return;
         }
         if ("/supermarket/getCommodities".equals(currentUri)) {
             getCommodities(req, resp);
-            return;
         }
         if ("/supermarket/getMembers".equals(currentUri)) {
             getMembers(req, resp);
-            return;
         }
         if ("/supermarket/getMember".equals(currentUri)) {
             getMember(req, resp);
-            return;
         }
         if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
-            return;
         }
         if ("/supermarket/addMember".equals(currentUri)) {
             addMember(req, resp);
@@ -147,6 +137,13 @@ public class PortalServlet extends HttpServlet {
 
     }
 
+    /**
+     * 添加会员
+     * @param req
+     * @param resp
+     * @throws IOException
+     * @throws ServletException
+     */
     private void addMember(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         String id = req.getParameter("id");
@@ -181,6 +178,12 @@ public class PortalServlet extends HttpServlet {
         req.setAttribute("members",members);
         req.getRequestDispatcher(managerPage).forward(req,resp);
     }
+    private void queryMember(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
+        //获取所有的会员列表
+        List<Member> members = supermarketService.getMembers();
+        req.setAttribute("members",members);
+        req.getRequestDispatcher(managerPage).forward(req,resp);
+    }
 
     private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -209,12 +212,12 @@ public class PortalServlet extends HttpServlet {
     }
 
     private void addBoughtCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String commodityID = req.getParameter("commodityID");
+        long commodityID = Long.parseLong(req.getParameter("commodityID"));
         String count = req.getParameter("count");
         String shoppingNumStr = req.getParameter("shoppingNum");
-        Double totalCost = 0.0;
+        BigDecimal totalCost=new BigDecimal(0);
         int category = 0;
-        long shoppingNumber = 0;
+        long shoppingNumber;
 
         if (shoppingNumStr != null && shoppingNumStr != "") {
             shoppingNumber = Long.parseLong(shoppingNumStr);
@@ -227,25 +230,33 @@ public class PortalServlet extends HttpServlet {
 
         req.setAttribute("shoppingNum", shoppingNumber);
 
-        CommodityVO commodity = supermarketService.getCommodityVO(Integer.parseInt(commodityID));
+        Commodity commodity = supermarketService.getCommodity((commodityID));
         if (commodity == null) {
             String forwardPage = cashierPage;
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
             view.forward(req, resp);
         }
 
-        commodity.setCount(Integer.parseInt(count));
+        OrderItem orderItem = new OrderItem();
+        orderItem.setCommodityId(commodityID);
+        orderItem.setCommodityName(commodity.getName());
+        orderItem.setCount(Integer.parseInt(count));
+        //todo 根据是否会员取相应的价格
+        orderItem.setPrice(commodity.getPrice());
+        //0未结账,1已结账
+        orderItem.setIsChecked(0);
+        orderItem.setShoppingNumber(shoppingNumber);
+        supermarketService.addBoughtCommodity(orderItem);
 
-        List<CommodityVO> commodityList;
-        commodityList = supermarketService.addBoughtCommodity(shoppingNumber, commodity);
-
-        for (CommodityVO item : commodityList) {
-            totalCost += item.getTotalPrice();
+        List<CommodityVO> orderItems =supermarketService.getBoughtCommodityBySN(shoppingNumber);
+        if (orderItems != null && orderItems.size()!=0){
+            for (CommodityVO item : orderItems) {
+                totalCost= totalCost.add(item.getTotal());
+            }
+            category = orderItems.size();
         }
 
-        category = commodityList.size();
-
-        req.setAttribute("commodityList", commodityList);
+        req.setAttribute("commodityList", orderItems);
         req.setAttribute("totalCost", totalCost);
         req.setAttribute("category", category);
 
@@ -256,7 +267,37 @@ public class PortalServlet extends HttpServlet {
     }
 
     private void removeBoughtCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        long commodityID = Long.parseLong(req.getParameter("commodityID"));
+        int count = StringUtils.isEmpty(req.getParameter("count")) ? 0 : Integer.parseInt(req.getParameter("count"));
+        BigDecimal totalCost=new BigDecimal(0);
+        int category = 0;
+        long shoppingNumber = Long.parseLong(req.getParameter("shoppingNum"));
+        req.setAttribute("shoppingNum", shoppingNumber);
 
+       OrderItem target = supermarketService.getOrderItemBySNandCId(shoppingNumber,commodityID);
+        if (target == null || count>target.getCount()) {
+            String forwardPage = cashierPage;
+            RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+            view.forward(req, resp);
+        }
+
+        supermarketService.removeBoughtCommodityS(target,count);
+
+        List<CommodityVO> orderItems =supermarketService.getBoughtCommodityBySN(shoppingNumber);
+        if (orderItems != null && orderItems.size()!=0){
+            for (CommodityVO item : orderItems) {
+                totalCost= totalCost.add(item.getTotal());
+            }
+            category = orderItems.size();
+        }
+
+        req.setAttribute("commodityList", orderItems);
+        req.setAttribute("totalCost", totalCost);
+        req.setAttribute("category", category);
+
+        String forwardPage = cashierPage;
+        RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+        view.forward(req, resp);
     }
 
     private void getCommodities(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -7,10 +7,12 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.supermarket.pojo.CommodityVO" %>
+<%@ page import="java.math.BigDecimal" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>cashier</title>
+    <title>收银管理</title>
 </head>
 <script type="text/javascript" src="${pageContext.request.contextPath}/component/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
@@ -26,20 +28,22 @@
             alert("请输入商品数量");
             return;
         }
-
-        $("#cashier_fm").attr('action', '/supermarket/addCommodity');
+        $("#cashier_fm").attr('action', '/supermarket/addBoughtCommodity');
         $("#cashier_fm").submit();
     };
 
     function removeCommodity() {
-
         var commodityID = $("#commodity_id_txt").val();
         if (commodityID == '' || commodityID == undefined) {
             alert("请输入商品码");
             return;
         }
-
-        $("#cashier_fm").attr('action', '/supermarket/removeCommodity');
+        var commodityCount = $("#commodity_count_txt").val();
+        if (commodityCount == '' || commodityCount == undefined) {
+            alert("请输入商品数量");
+            return;
+        }
+        $("#cashier_fm").attr('action', '/supermarket/removeBoughtCommodity');
         $("#cashier_fm").submit();
     };
 
@@ -106,9 +110,9 @@
 <%
     String shoppingNum = request.getAttribute("shoppingNum").toString();
 
-    List<Commodity> commodityList = (ArrayList) request.getAttribute("commodityList");
+    List<CommodityVO> commodityList = (ArrayList) request.getAttribute("commodityList");
     Integer category = null == request.getAttribute("category") ? 0 : Integer.parseInt(request.getAttribute("category").toString());
-    Integer totalCost = null == request.getAttribute("totalCost") ? 0 : Integer.parseInt(request.getAttribute("totalCost").toString());
+    BigDecimal totalCost = null == request.getAttribute("totalCost") ? BigDecimal.ZERO : new BigDecimal(request.getAttribute("totalCost").toString());
 %>
 
 <div align="center">
@@ -119,7 +123,7 @@
     登录时间 ：<label><fmt:formatDate value="<%=new Date() %>" pattern="yyyy-MM-dd HH:mm:ss"/></label>
     <hr>
 </div>
-<form action="" id="cashier_fm">
+<form action="" id="cashier_fm" method="post">
     <input type="hidden" id="shopping_num_txt" name="shoppingNum" value="<%= shoppingNum%>">
     <div>
         小票流水号 ： <%= shoppingNum%>  输入商品条码：<input type="text" id="commodity_id_txt" name="commodityID"> 数量：<input
@@ -146,15 +150,15 @@
         <tbody>
         <c:forEach items="<%=commodityList%>" var="item">
             <tr>
-                <td align="center">${item.commodityid}</td>
-                <td align="center">${item.commodityname}</td>
+                <td align="center">${item.id}</td>
+                <td align="center">${item.name}</td>
                 <td align="center">${item.specification}</td>
                 <td align="center">${item.units}</td>
                 <td align="center">${item.stock}</td>
-                <td align="center">${item.memberPrice}</td>
+                <td align="center">${item.memberprice}</td>
                 <td align="center">${item.price}</td>
                 <td align="center">${item.count}</td>
-                <td align="center">${item.totalprice}</td>
+                <td align="center">${item.total}</td>
             </tr>
         </c:forEach>
         </tbody>

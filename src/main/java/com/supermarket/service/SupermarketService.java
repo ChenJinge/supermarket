@@ -3,11 +3,13 @@ package com.supermarket.service;
 
 import com.supermarket.bean.Commodity;
 import com.supermarket.bean.Member;
+import com.supermarket.bean.OrderItem;
 import com.supermarket.bean.User;
 import com.supermarket.dao.SuperMarketDao;
 import com.supermarket.pojo.CommodityVO;
 import com.supermarket.util.IDUtil;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,15 +48,60 @@ public class SupermarketService {
         }
     }
     //-----------------------收银---------------------
-    public CommodityVO getCommodityVO(int id){
-        return null;
-    }
-    public List<CommodityVO> addBoughtCommodity(Long shoppingNum, CommodityVO commodity) {
-        return null;
+
+    public void addBoughtCommodity(OrderItem orderItem) {
+
+        OrderItem old = superMarketDao.getOrderItemBySNandCId(orderItem.getShoppingNumber(),orderItem.getCommodityId());
+        //如果第一次添加该商品，直接插入,total=price*count
+        orderItem.setTotal(orderItem.getPrice().multiply(new BigDecimal(orderItem.getCount())));
+        if (old ==null ){
+            //todo 添加事务
+            superMarketDao.reduceStock(orderItem.getCommodityId(),orderItem.getCount());
+            superMarketDao.insertOrderItem(orderItem);
+            return;
+        }
+        //否则，更新数量、总价格即可
+        superMarketDao.reduceStock(orderItem.getCommodityId(),orderItem.getCount());
+        superMarketDao.addOrderItem(orderItem);
+        return;
     }
 
-    public List<Commodity> removeBoughtCommodity(Integer shoppingNum, Commodity commodity) {
-        return null;
+    /**
+     * 根据小票获取所有商品
+     * @param shoppingNum
+     * @return
+     */
+    public List<CommodityVO> getBoughtCommodityBySN(long shoppingNum){
+        List<CommodityVO> items = superMarketDao.getOrderItemsBySN(shoppingNum);
+        return items;
+    }
+
+    /**
+     * 根据小票号和商品id获取已添加到购物车的商品信息
+     * @param shoppingNumber
+     * @param commodityId
+     * @return
+     */
+    public OrderItem getOrderItemBySNandCId(long shoppingNumber,long commodityId){
+        return superMarketDao.getOrderItemBySNandCId(shoppingNumber,commodityId);
+    }
+
+    /**
+     * 从购物车中移除或减少商品数量
+     * @param item 库中的信息
+     * @param count 要减少的数量
+     * @return
+     */
+    public void removeBoughtCommodityS(OrderItem item,int count) {
+        if (count <item.getCount()){
+            //减少商品数量
+            item.setTotal(item.getPrice().multiply(new BigDecimal(count)));
+            superMarketDao.reduceOrderItem(item,count);
+        }else {
+            //移除商品
+            superMarketDao.removeOrderItem(item);
+        }
+        superMarketDao.addStock(item.getCommodityId(),count);
     }
 
     public List<Commodity> checkout(Integer type, Integer shoppingNum) {
