@@ -44,12 +44,15 @@ public class PortalServlet extends HttpServlet {
 
         Cookie[] cookies = req.getCookies();
         String cookieValue = "";
-        for ( Cookie cookie:cookies ) {
-            if ("kfc".equals(cookie.getName())){
-                cookieValue = cookie.getValue();
-                break;
+        if (cookies !=null && cookies.length>0){
+            for ( Cookie cookie:cookies ) {
+                if ("kfc".equals(cookie.getName())){
+                    cookieValue = cookie.getValue();
+                    break;
+                }
             }
         }
+
         if ("/supermarket/welcome".equals(currentUri) || !cookieValue.equals(session.getAttribute("kfc"))){
             String forwardPage = "/WEB-INF/page/login.jsp";
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
@@ -71,11 +74,6 @@ public class PortalServlet extends HttpServlet {
         }else  if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
         }
-//        if ("/supermarket/welcome".equals(currentUri)){
-//            String forwardPage = "/WEB-INF/page/login.jsp";
-//            RequestDispatcher view = req.getRequestDispatcher(forwardPage);
-//            view.forward(req, resp);
-//        }
 
     }
 
@@ -89,10 +87,12 @@ public class PortalServlet extends HttpServlet {
 
         Cookie[] cookies = req.getCookies();
         String cookieValue = "";
-        for ( Cookie cookie:cookies ) {
-            if ("kfc".equals(cookie.getName())){
-                cookieValue = cookie.getValue();
-                break;
+        if (cookies !=null && cookies.length>0){
+            for ( Cookie cookie:cookies ) {
+                if ("kfc".equals(cookie.getName())){
+                    cookieValue = cookie.getValue();
+                    break;
+                }
             }
         }
         if (!cookieValue.equals(session.getAttribute("kfc"))){
@@ -151,6 +151,7 @@ public class PortalServlet extends HttpServlet {
 
         if (user != null) {
             Cookie cookie = new Cookie("kfc","sb");
+            cookie.setMaxAge(60*5);
             resp.addCookie(cookie);
             req.getSession().setAttribute("kfc","sb");
 
