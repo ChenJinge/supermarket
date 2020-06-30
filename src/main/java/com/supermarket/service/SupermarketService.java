@@ -122,8 +122,8 @@ public class SupermarketService {
         superMarketDao.insertMember(member);
         return "";
     }
-    public Member getMember(){
-        return null;
+    public Member getMember(String id){
+        return superMarketDao.getMember(Long.parseLong(id));
     }
     public List<Member> getMembers() {
         return superMarketDao.getMembers();

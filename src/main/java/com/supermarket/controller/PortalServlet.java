@@ -1,6 +1,7 @@
 package com.supermarket.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.supermarket.bean.Commodity;
 import com.supermarket.bean.Member;
 import com.supermarket.bean.OrderItem;
@@ -13,6 +14,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -52,11 +54,20 @@ public class PortalServlet extends HttpServlet {
                 }
             }
         }
-
-        if ("/supermarket/welcome".equals(currentUri) || !cookieValue.equals(session.getAttribute("kfc"))){
+        if ("/supermarket/welcome".equals(currentUri) ) {
             String forwardPage = "/WEB-INF/page/login.jsp";
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
             view.forward(req, resp);
+            return;
+        }
+        if(!cookieValue.equals(session.getAttribute("kfc"))){
+            if ("/supermarket/getMember".equals(currentUri)) {
+                getMember(req, resp);
+            }else {
+                String forwardPage = "/WEB-INF/page/login.jsp";
+                RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+                view.forward(req, resp);
+            }
         }else if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
         }else  if ("/supermarket/checkoutByCash".equals(currentUri)) {
@@ -69,12 +80,9 @@ public class PortalServlet extends HttpServlet {
             getMembers(req, resp);
         }else  if ("/supermarket/queryMember".equals(currentUri)) {
             queryMember(req, resp);
-        }else  if ("/supermarket/getMember".equals(currentUri)) {
-            getMember(req, resp);
         }else  if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
         }
-
     }
 
     @Override
@@ -98,6 +106,8 @@ public class PortalServlet extends HttpServlet {
         if (!cookieValue.equals(session.getAttribute("kfc"))){
             if ("/supermarket/login".equals(currentUri)) {
                 login(req, resp);
+            }else if ("/supermarket/getMember".equals(currentUri)) {
+                getMember(req, resp);
             }else {
                 String forwardPage = "/WEB-INF/page/login.jsp";
                 RequestDispatcher view = req.getRequestDispatcher(forwardPage);
@@ -128,7 +138,7 @@ public class PortalServlet extends HttpServlet {
             if ("/supermarket/getMembers".equals(currentUri)) {
                 getMembers(req, resp);
             }
-            //进入管理员页面（会员管理）
+
             if ("/supermarket/getMember".equals(currentUri)) {
                 getMember(req, resp);
             }
@@ -219,7 +229,21 @@ public class PortalServlet extends HttpServlet {
 
     }
 
-    private void getMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void getMember(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        String memberID = req.getParameter("memberID");
+        final Member member = supermarketService.getMember(memberID);
+        String json = JSON.toJSONString(member);
+
+        try {
+            Thread.sleep(1000*5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        PrintWriter writer = resp.getWriter();
+        writer.write(json);
+        writer.close();
 
     }
 

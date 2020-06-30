@@ -11,9 +11,7 @@ import java.util.List;
 
 public class BaseDao {
 
-    private Connection connection;
-    private PreparedStatement preparedStatement;
-    private ResultSet resultSet;
+
 
 
     /**
@@ -24,6 +22,9 @@ public class BaseDao {
      */
     public <T> List<T> query(String sql, Object[] paramsValue, Class<T> clazz) {
 
+         Connection connection= null;
+         PreparedStatement preparedStatement=null;
+         ResultSet resultSet=null;
         try {
             // 返回的集合
             List<T> list = new ArrayList<T>();
@@ -82,6 +83,8 @@ public class BaseDao {
      */
     public void update(String sql, Object[] paramsValue) {
 
+        Connection connection=null;
+        PreparedStatement preparedStatement=null;
         try {
             // 获取连接
             connection = JDBCUtil.getConnection();
