@@ -1,10 +1,7 @@
 package com.supermarket.service;
 
 
-import com.supermarket.bean.Commodity;
-import com.supermarket.bean.Member;
-import com.supermarket.bean.OrderItem;
-import com.supermarket.bean.User;
+import com.supermarket.bean.*;
 import com.supermarket.dao.SuperMarketDao;
 import com.supermarket.pojo.CommodityVO;
 import com.supermarket.util.IDUtil;
@@ -20,8 +17,22 @@ public class SupermarketService {
         this.superMarketDao = new SuperMarketDao();
     }
 
+    //--------------------------登录------------------------
     public User getUser(String username, String password) {
         return superMarketDao.getUser(username, password);
+    }
+
+    public void addCustomizeSession(CustomizeSession customizeSession){
+        CustomizeSession old = superMarketDao.getCustomizeSession(customizeSession.getKfc());
+        if (null == old) {
+            superMarketDao.addCustomizeSession(customizeSession);
+        }else {
+            superMarketDao.updateCustomizeSession(customizeSession);
+        }
+    }
+
+    public CustomizeSession getCustomizeSession(String kfc){
+        return superMarketDao.getCustomizeSession(kfc);
     }
 
     //--------------------------进货-----------------------

@@ -2,10 +2,7 @@ package com.supermarket.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.supermarket.bean.Commodity;
-import com.supermarket.bean.Member;
-import com.supermarket.bean.OrderItem;
-import com.supermarket.bean.User;
+import com.supermarket.bean.*;
 import com.supermarket.pojo.CommodityVO;
 import com.supermarket.util.IDUtil;
 import com.supermarket.service.SupermarketService;
@@ -17,8 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 public class PortalServlet extends HttpServlet {
@@ -39,28 +35,18 @@ public class PortalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String currentUri = req.getRequestURI();
-        HttpSession session = req.getSession();
-
-        System.out.println(currentUri + " this request method is GET method");
-        System.out.println(" This request seesion id is " + session.getId());
-
-        Cookie[] cookies = req.getCookies();
-        String cookieValue = "";
-        if (cookies !=null && cookies.length>0){
-            for ( Cookie cookie:cookies ) {
-                if ("kfc".equals(cookie.getName())){
-                    cookieValue = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        if ("/supermarket/welcome".equals(currentUri) ) {
+        final Map<String, String> loginMap = getLoginMap(req);
+        //没有带着kfc，直接去登录
+        if ("/supermarket/welcome".equals(currentUri) || StringUtils.isEmpty(loginMap.get("kfc"))) {
             String forwardPage = "/WEB-INF/page/login.jsp";
             RequestDispatcher view = req.getRequestDispatcher(forwardPage);
             view.forward(req, resp);
             return;
         }
-        if(!cookieValue.equals(session.getAttribute("kfc"))){
+        //查询满足时间条件的、cookie为kfc的数据
+        CustomizeSession customizeSession = supermarketService.getCustomizeSession(loginMap.get("kfc"));
+        //未登录
+        if(null ==customizeSession ||  !loginMap.get("kfc").equals(customizeSession.getKfc())){
             if ("/supermarket/getMember".equals(currentUri)) {
                 getMember(req, resp);
             }else {
@@ -68,6 +54,7 @@ public class PortalServlet extends HttpServlet {
                 RequestDispatcher view = req.getRequestDispatcher(forwardPage);
                 view.forward(req, resp);
             }
+        //已登录
         }else if ("/supermarket/back2cashier".equals(currentUri)) {
             back2cashier(req, resp);
         }else  if ("/supermarket/checkoutByCash".equals(currentUri)) {
@@ -88,35 +75,33 @@ public class PortalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String currentUri = req.getRequestURI();
-        HttpSession session = req.getSession();
 
-        System.out.println(currentUri + " this request method is POST method");
-        System.out.println(" This request session id is " + session.getId());
-
-        Cookie[] cookies = req.getCookies();
-        String cookieValue = "";
-        if (cookies !=null && cookies.length>0){
-            for ( Cookie cookie:cookies ) {
-                if ("kfc".equals(cookie.getName())){
-                    cookieValue = cookie.getValue();
-                    break;
-                }
-            }
+        if ("/supermarket/login".equals(currentUri)) {
+            login(req, resp);
+            return;
         }
-        if (!cookieValue.equals(session.getAttribute("kfc"))){
-            if ("/supermarket/login".equals(currentUri)) {
-                login(req, resp);
-            }else if ("/supermarket/getMember".equals(currentUri)) {
+
+        final Map<String, String> loginMap = getLoginMap(req);
+        //没有带着kfc，直接去登录
+        if ( StringUtils.isEmpty(loginMap.get("kfc"))) {
+            String forwardPage = "/WEB-INF/page/login.jsp";
+            RequestDispatcher view = req.getRequestDispatcher(forwardPage);
+            view.forward(req, resp);
+            return;
+        }
+        CustomizeSession customizeSession = supermarketService.getCustomizeSession(loginMap.get("kfc"));
+
+        //未登录
+        if (null ==customizeSession || !loginMap.get("kfc").equals(customizeSession.getKfc())){
+           if ("/supermarket/getMember".equals(currentUri)) {
                 getMember(req, resp);
             }else {
                 String forwardPage = "/WEB-INF/page/login.jsp";
                 RequestDispatcher view = req.getRequestDispatcher(forwardPage);
                 view.forward(req, resp);
             }
+        //已登录
         }else {
-            if ("/supermarket/login".equals(currentUri)) {
-                login(req, resp);
-            }
             if ("/supermarket/addBoughtCommodity".equals(currentUri)) {
                 addBoughtCommodity(req, resp);
             }
@@ -160,11 +145,15 @@ public class PortalServlet extends HttpServlet {
         User user = supermarketService.getUser(username, password);
 
         if (user != null) {
-            Cookie cookie = new Cookie("kfc","sb");
+            Cookie cookie = new Cookie("kfc",username);
             cookie.setMaxAge(60*5);
             resp.addCookie(cookie);
-            req.getSession().setAttribute("kfc","sb");
+            CustomizeSession customizeSession = new CustomizeSession();
+            customizeSession.setKfc(username);
+            customizeSession.setCreateTime(System.currentTimeMillis());
+            supermarketService.addCustomizeSession(customizeSession);
 
+            System.out.println(username + "登录成功后，保存session到数据库，保存cookie到客户端");
             if ("1".equals(role)) {
                 forwardPage = managerPage;
             } else if ("2".equals(role)) {
@@ -230,20 +219,20 @@ public class PortalServlet extends HttpServlet {
     }
 
     private void getMember(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-        String memberID = req.getParameter("memberID");
-        final Member member = supermarketService.getMember(memberID);
-        String json = JSON.toJSONString(member);
-
+        System.out.println("即将查询member 睡眠……");
+        System.out.println(new Date());
         try {
-            Thread.sleep(1000*5);
+            Thread.sleep(30*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        String memberID = req.getParameter("memberID");
+        final Member member = supermarketService.getMember(memberID);
+        String json = JSON.toJSONString(member);
         PrintWriter writer = resp.getWriter();
         writer.write(json);
         writer.close();
+        System.out.println("查询member结束");
 
     }
 
@@ -405,5 +394,21 @@ public class PortalServlet extends HttpServlet {
 
     private void checkoutByMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+    }
+
+    private Map<String,String> getLoginMap (HttpServletRequest req){
+
+        Map<String,String> loginMap = new HashMap();
+        Cookie[] cookies = req.getCookies();
+        if (cookies !=null && cookies.length>0){
+            for ( Cookie cookie:cookies ) {
+                if ("kfc".equals(cookie.getName())){
+                    loginMap.put("kfc",cookie.getValue());
+                    System.out.println("kfc: " + cookie.getValue());
+                    break;
+                }
+            }
+        }
+        return loginMap;
     }
 }

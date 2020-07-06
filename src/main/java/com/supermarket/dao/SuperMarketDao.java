@@ -3,6 +3,7 @@ package com.supermarket.dao;
 
 import com.supermarket.bean.*;
 import com.supermarket.pojo.CommodityVO;
+import com.supermarket.util.JDBCUtil;
 
 import java.util.List;
 
@@ -16,6 +17,30 @@ public class SuperMarketDao extends BaseDao {
 
         if (users.size() > 0) {
             return users.get(0);
+        }
+        return null;
+    }
+
+    public void addCustomizeSession(CustomizeSession customizeSession){
+        String sql ="insert into tb_customize_session(kfc,create_time) values(?,?)";
+        Object[] insert_paramValue = {customizeSession.getKfc(),customizeSession.getCreateTime()};
+        super.update(sql,insert_paramValue);
+    }
+
+    public void updateCustomizeSession(CustomizeSession customizeSession){
+        String update_sql = "update tb_customize_session set create_time = ? where id = ?";
+        Object[] update_paramValue = {customizeSession.getCreateTime(),customizeSession.getId()};
+        super.update(update_sql,update_paramValue);
+    }
+
+    public CustomizeSession getCustomizeSession(String kfc){
+        //创建时间>当前时间-过期时间
+        String sql = "select * from tb_customize_session where kfc = ? and create_time> ?";
+        Object[] paramValue = {kfc,System.currentTimeMillis()-JDBCUtil.expireTime};
+        List<CustomizeSession> CustomizeSessions = super.query(sql, paramValue, CustomizeSession.class);
+
+        if (CustomizeSessions.size() > 0) {
+            return CustomizeSessions.get(0);
         }
         return null;
     }

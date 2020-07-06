@@ -12,7 +12,7 @@ public class JDBCUtil {
     private static String driverClass;
     private static String userName;
     private static String password;
-
+    public static long expireTime;
     /**
      * 初始化驱动程序
      * 静态代码块中（只加载一次）
@@ -34,6 +34,7 @@ public class JDBCUtil {
             driverClass = properties.getProperty("driverClass");
             userName = properties.getProperty("user");
             password = properties.getProperty("password");
+            expireTime = Long.parseLong(properties.getProperty("expireTime"));
             Class.forName(driverClass);
 
         } catch (Exception e) {
