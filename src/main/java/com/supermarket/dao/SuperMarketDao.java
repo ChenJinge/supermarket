@@ -77,7 +77,7 @@ public class SuperMarketDao extends BaseDao {
 
     public void insertOrderItem(OrderItem orderItem) {
         String sql = "insert tb_order_item values(?,?,?,?,?,?,?,?)";
-        Object[] paramValue = {orderItem.getId(),orderItem.getOrderNumber(),orderItem.getCommodityId(),orderItem.getCommodityName(),orderItem.getPrice(),orderItem.get(),order.getCheckoutTime()};
+        Object[] paramValue = {orderItem.getId(),orderItem.getOrderNumber(),orderItem.getCommodityId(),orderItem.getCommodityName(),orderItem.getPrice(),orderItem.getTotal(),orderItem.getCount()};
         super.update(sql,paramValue);
     }
 
