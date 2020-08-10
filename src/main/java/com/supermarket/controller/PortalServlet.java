@@ -69,6 +69,8 @@ public class PortalServlet extends HttpServlet {
             queryMember(req, resp);
         }else  if ("/supermarket/inputCommodities".equals(currentUri)) {
             inputCommodity(req, resp);
+        }else if ("/supermarket/getAllMemberTest".equals(currentUri)){
+            getAllMemberTest(resp);
         }
     }
 
@@ -156,6 +158,8 @@ public class PortalServlet extends HttpServlet {
             System.out.println(username + "登录成功后，保存session到数据库，保存cookie到客户端");
             if ("1".equals(role)) {
                 forwardPage = managerPage;
+//                List<Member> members = supermarketService.getMembers();
+//                req.setAttribute("members",members);
             } else if ("2".equals(role)) {
                 forwardPage = cashierPage;
             }
@@ -234,6 +238,13 @@ public class PortalServlet extends HttpServlet {
         writer.close();
         System.out.println("查询member结束");
 
+    }
+    private void getAllMemberTest( HttpServletResponse resp) throws IOException, ServletException {
+        List<Member> members = supermarketService.getMembers();
+        String json = JSON.toJSONString(members);
+        PrintWriter writer = resp.getWriter();
+        writer.write(json);
+        writer.close();
     }
 
     private void back2cashier(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

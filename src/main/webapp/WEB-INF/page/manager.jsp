@@ -55,7 +55,7 @@
         </tr>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tablecontent">
         <c:forEach items="${members}" var="item">
             <tr>
                 <td align="center">${item.id}</td>
@@ -70,4 +70,38 @@
     </table>
 </form>
 </body>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ajax({
+            type: "get",
+            url: "/supermarket/getAllMemberTest",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    // for (var i = 0; i < data.length; i++) {
+                    //     $("#tablecontent").append("<tr><td align='center'> ").append(data[i].id)
+                    //         .append("</td><td align='center'>").append(data[i].name)
+                    //         // .append("</td><td align='center'>").append(data[i].phone)
+                    //         // .append("</td><td align='center'>").append(data[i].points)
+                    //         // .append("</td><td align='center'>").append(data[i].total)
+                    //         // .append("</td><td align='center'>").append(data[i].registerTime)
+                    //         .append("</td></tr>");
+                    // }
+
+
+                    var tbody = $("#tablecontent").html();
+                    for (var i = 0; i < data.length; i++) {
+                        tbody=tbody + "<tr><td align='center'>" + data[i].id + "</td>";
+                        tbody=tbody + "<td align='center'>" + data[i].name + "</td>";
+                        tbody=tbody + "<td align='center'>" + data[i].phone + "</td>";
+                        tbody=tbody + "<td align='center'>" + data[i].points + "</td>";
+                        tbody=tbody + "<td align='center'>" + data[i].total + "</td>";
+                        tbody=tbody + "<td align='center'>" + data[i].registerTime + "</td></tr>";
+                    }
+                    $("#tablecontent").html(tbody);
+                }
+            }
+        });
+    });
+</script>
 </html>
