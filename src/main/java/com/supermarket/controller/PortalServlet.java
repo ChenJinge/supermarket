@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 
@@ -158,11 +160,28 @@ public class PortalServlet extends HttpServlet {
         member.setRegisterTime(currentTime);
         member.setUpdateTime(currentTime);
 
-        supermarketService
+
     }
 
     private void getMembers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json; charset=utf-8");
+        System.out.println(System.currentTimeMillis());
+        System.out.println(new Date());
+        String jsonStr = "{\"name\":\"fake dead damon\",\"type\":\"test\"}";
+        PrintWriter out = null;
+        try {
+            Thread.sleep(60000);
 
+            out = resp.getWriter();
+            out.write(jsonStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
     private void getMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

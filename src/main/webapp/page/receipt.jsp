@@ -76,7 +76,7 @@
             <td align="left"><label>本次积分</label></td>
             <td align="right"><label>${member_current_points} </label></td>
         </tr>
-        <tr <c:if test="${checkout_type == 0}"> hidden </c:if>}>
+        <tr <c:if test="${checkout_type == 0}"> hidden </c:if>>
             <td align="left"><label>累计积分</label></td>
             <td align="right"><label>${member_points} </label></td>
         </tr>
